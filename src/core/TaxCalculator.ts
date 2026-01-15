@@ -5,8 +5,13 @@ export class TaxCalculator implements TaxCalculatorPort {
   // We use "Dependency Injection" here.
   constructor(private rateRepository: TaxRateRepository) {}
 
-  calculateTax(amount: number): number {
+  calculateTax(amount: number, discount: number = 0): number {
     const rate = this.rateRepository.getRate();
-    return amount * rate;
+    const discountedAmount = amount - discount;
+
+    // Ensure we don't return negative tax if discount > amount
+    const finalAmount = Math.max(0, discountedAmount);
+
+    return finalAmount * rate;
   }
 }
