@@ -11,12 +11,16 @@ export class ConsoleUI {
       output: process.stdout,
     });
 
-    rl.question("Enter amount to calculate tax: ", (answer) => {
-      const amount = parseFloat(answer);
-      const tax = this.TaxCalculator.calculateTax(amount);
+    rl.question("Enter amount to calculate tax: ", (amountStr) => {
+      rl.question("Enter discount (optional): ", (discountStr) => {
+        const amount = parseFloat(amountStr);
+        const discount = parseFloat(discountStr);
 
-      console.log(`The calculated tax is: ${tax}`);
-      rl.close();
+        const tax = this.TaxCalculator.calculateTax(amount, discount);
+
+        console.log(`The calculated tax is: ${tax}`);
+        rl.close();
+      });
     });
   }
 }
