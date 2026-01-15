@@ -24,4 +24,19 @@ describe("TaxCalculator with Different Adapaters", () => {
 
     expect(result).toBe(15);
   });
+
+  it("should apply discount before calculating tax", () => {
+    // 1. Arrange
+    // Using the 20% Stub Repo
+    const stubRepo = new StubTaxRateRepository();
+    const calculator = new TaxCalculator(stubRepo);
+
+    // 2. Act
+    // 100 amount - 20 discount = 80 taxable
+    // 80 * 0.2 tax rate = 16
+    const result = calculator.calculateTax(100, 20);
+
+    // 3. Assert
+    expect(result).toBe(16);
+  });
 });
