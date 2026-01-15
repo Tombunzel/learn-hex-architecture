@@ -2,11 +2,10 @@ import { TaxCalculatorPort } from "../ports/driving/TaxCalculatorPort";
 import { TaxRateRepository } from "../ports/driven/TaxRateRepository";
 
 export class TaxCalculator implements TaxCalculatorPort {
-  // We use "Dependency Injection" here.
   constructor(private rateRepository: TaxRateRepository) {}
 
-  calculateTax(amount: number, discount: number = 0): number {
-    const rate = this.rateRepository.getRate();
+  async calculateTax(amount: number, discount: number = 0): Promise<number> {
+    const rate = await this.rateRepository.getRate();
     const discountedAmount = amount - discount;
 
     // Ensure we don't return negative tax if discount > amount

@@ -1,3 +1,3 @@
 export interface TaxRateRepository {
-  getRate(): number;
+  getRate(): Promise<number>;
 }

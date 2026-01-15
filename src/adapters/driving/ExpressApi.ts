@@ -10,7 +10,7 @@ export class ExpressApi {
     this.app.use(express.json());
 
     // Define the Route
-    this.app.get("/tax", (req: Request, res: Response) => {
+    this.app.get("/tax", async (req: Request, res: Response) => {
       // 1. Adapt Input: Extract data from Query Params
       const amount = parseFloat(req.query.amount as string);
       const discount = parseFloat(req.query.discount as string) || 0;
@@ -21,7 +21,7 @@ export class ExpressApi {
       }
 
       // 2. Call the Port (The Core)
-      const tax = this.taxCalculator.calculateTax(amount, discount);
+      const tax = await this.taxCalculator.calculateTax(amount, discount);
 
       // 3. Adapt Output: Return JSON Response
       res.send({
