@@ -1,5 +1,5 @@
 import { TaxCalculatorPort } from "../../ports/driving/TaxCalculatorPort";
-import * as readline from "readline";
+import readline from "readline";
 
 // This Adapter talks to the User (via Console) and calls the Port.
 export class ConsoleUI {
