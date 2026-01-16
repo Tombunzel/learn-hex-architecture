@@ -1,7 +1,6 @@
-import { TaxRateRepository } from "../../ports/driven/TaxRateRepository";
+import { GetTaxRate } from "../../ports/driven/TaxRateRepository";
 
-export class StubTaxRateRepository implements TaxRateRepository {
-  async getRate(): Promise<number> {
-    return 0.2; // 20% tax
-  }
-}
+// A simple pure function (or async function)
+export const getStubRate: GetTaxRate = async () => {
+  return 0.2; // 20%
+};

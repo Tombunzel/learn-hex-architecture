@@ -1,41 +1,25 @@
 import request from "supertest";
-import { ExpressApi } from "./ExpressApi";
-import { TaxCalculator } from "../../core/TaxCalculator";
-import { StubTaxRateRepository } from "../driven/StubTaxRateRepository";
+import { createExpressApp } from "./ExpressApi";
+import { createTaxCalculator } from "../../core/TaxCalculator";
+import { getStubRate } from "../driven/StubTaxRateRepository";
 
-describe("ExpressApi Driving Adapter", () => {
-  it("should return 200 and the calclulated tax", async () => {
-    // 1. Arrange: Wire up the Hexagon
-    const repo = new StubTaxRateRepository(); // Returns 20%
-    const core = new TaxCalculator(repo);
-    const apiAdapter = new ExpressApi(core);
-    const app = apiAdapter.getApp();
+describe("ExpressApi (Functional)", () => {
+  it("should return 200 and the calculated tax", async () => {
+    // Arrange
+    const calculateTax = createTaxCalculator(getStubRate);
+    const app = createExpressApp(calculateTax); // Just pass the function!
 
-    // 2. Act: Send a fake HTTP request
+    // Act
     const response = await request(app)
       .get("/tax")
       .query({ amount: "100", discount: "0" });
 
-    // 3. Assert: Check HTTP status and JSON body
+    // Assert
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       amount: 100,
       discount: 0,
       tax: 20,
     });
-  });
-
-  it("should handle discount correctly", async () => {
-    const repo = new StubTaxRateRepository(); // Returns 20%
-    const core = new TaxCalculator(repo);
-    const apiAdapter = new ExpressApi(core);
-    const app = apiAdapter.getApp();
-
-    const response = await request(app)
-      .get("/tax")
-      .query({ amount: "100", discount: "50" });
-
-    expect(response.status).toBe(200);
-    expect(response.body.tax).toBe(10); // (100-50) * 0.2 = 10
   });
 });

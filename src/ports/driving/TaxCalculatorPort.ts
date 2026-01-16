@@ -1,4 +1,2 @@
-// This is the "contract". Any UI or Test must follow this.
-export interface TaxCalculatorPort {
-  calculateTax(amount: number, discount?: number): Promise<number>;
-}
+// The "Contract" is also just a function signature
+export type CalculateTax = (amount: number, discount?: number) => Promise<number>;

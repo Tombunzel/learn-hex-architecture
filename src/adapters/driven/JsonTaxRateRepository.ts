@@ -1,11 +1,6 @@
-// This file simulates an external storage system.
+import { GetTaxRate } from "../../ports/driven/TaxRateRepository";
 
-import { TaxRateRepository } from "../../ports/driven/TaxRateRepository";
-
-export class JsonTaxRateRepository implements TaxRateRepository {
-  async getRate(): Promise<number> {
-    // Simulate an external value (e.g., 15%).
-    console.log("Fetching rate from external JSON source...");
-    return 0.15;
-  }
-}
+export const getJsonRate: GetTaxRate = async () => {
+  console.log("Fetching rate from external JSON source...");
+  return 0.15;
+};

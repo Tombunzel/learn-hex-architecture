@@ -1,19 +1,12 @@
-import { TaxCalculator } from "./core/TaxCalculator";
-import { JsonTaxRateRepository } from "./adapters/driven/JsonTaxRateRepository";
-// import { StubTaxRateRepository } from "./adapters/driven/StubTaxRateRepository";
-import { ExpressApi } from "./adapters/driving/ExpressApi";
+import { createTaxCalculator } from "./core/TaxCalculator";
+import { createSqlRateGetter } from "./adapters/driven/SqlTaxRateRepository";
+import { startServer } from "./adapters/driving/ExpressApi";
 
-// 1. Wire the Repo (Driven)
-// === OPTION A: External JSON File ===
-const myRepo = new JsonTaxRateRepository();
-/// === OPTION B: Hardcoded Stub (Dev/Testing) ===
-// const myRepo = new StubTaxRateRepository();
+// 1. Create Dependency (Factory)
+const getRate = createSqlRateGetter();
 
-// 2. Wire the Core
-const myCore = new TaxCalculator(myRepo);
+// 2. Create Core (Function Composition)
+const calculateTax = createTaxCalculator(getRate);
 
-// 3. Wire the Web API (Driving)
-const myApi = new ExpressApi(myCore);
-
-// 4. Start Server on port 3000
-myApi.start(3000);
+// 3. Start Server
+startServer(calculateTax, 3000);

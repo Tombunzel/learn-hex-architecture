@@ -1,26 +1,21 @@
-import { TaxCalculatorPort } from "../../ports/driving/TaxCalculatorPort";
-import readline from "readline";
+import { CalculateTax } from "../../ports/driving/TaxCalculatorPort";
+import * as readline from "readline";
 
-// This Adapter talks to the User (via Console) and calls the Port.
-export class ConsoleUI {
-  constructor(private TaxCalculator: TaxCalculatorPort) {}
+export const startConsoleApp = (calculateTax: CalculateTax) => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-  start() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
+  rl.question("Enter amount: ", (amountStr) => {
+    rl.question("Enter discount (optional): ", async (discountStr) => {
+      const amount = parseFloat(amountStr);
+      const discount = parseFloat(discountStr) || 0;
+
+      const tax = await calculateTax(amount, discount);
+
+      console.log(`The calculated tax (after discount) is: ${tax}`);
+      rl.close();
     });
-
-    rl.question("Enter amount to calculate tax: ", (amountStr) => {
-      rl.question("Enter discount (optional): ", async (discountStr) => {
-        const amount = parseFloat(amountStr);
-        const discount = parseFloat(discountStr);
-
-        const tax = await this.TaxCalculator.calculateTax(amount, discount);
-
-        console.log(`The calculated tax is: ${tax}`);
-        rl.close();
-      });
-    });
-  }
-}
+  });
+};

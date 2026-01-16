@@ -1,16 +1,11 @@
-import { TaxCalculatorPort } from "../ports/driving/TaxCalculatorPort";
-import { TaxRateRepository } from "../ports/driven/TaxRateRepository";
+import { GetTaxRate } from "../ports/driven/TaxRateRepository";
+import { CalculateTax } from "../ports/driving/TaxCalculatorPort";
 
-export class TaxCalculator implements TaxCalculatorPort {
-  constructor(private rateRepository: TaxRateRepository) {}
-
-  async calculateTax(amount: number, discount: number = 0): Promise<number> {
-    const rate = await this.rateRepository.getRate();
-    const discountedAmount = amount - discount;
-
-    // Ensure we don't return negative tax if discount > amount
-    const finalAmount = Math.max(0, discountedAmount);
-
-    return finalAmount * rate;
-  }
-}
+// This function "injects" the dependencies and returns the domain logic.
+export const createTaxCalculator = (getRate: GetTaxRate): CalculateTax => {
+  return async (amount: number, discount: number = 0): Promise<number> => {
+    const rate = await getRate();
+    const discountedAmount = Math.max(0, amount - discount);
+    return discountedAmount * rate;
+  };
+};
